@@ -156,7 +156,7 @@ func (g *GameHandlers) StartGame(c echo.Context) error {
 	isLimited, _ := ratelimit.IsLimited(g.server.DB, fmt.Sprintf(GAME_USER_HOUR_LIMIT, int(user.Id)), user.HourLimit, time.Hour)
 	if isLimited {
 		logrus.Warn("User Limited")
-		return showNotification(c, "You’ve reached your game limit for this hour and can’t start a new game just yet. Please try again in an hour to continue playing!!")
+		return showNotification(c, "You've reached your game limit for this hour and can't start a new game just yet. Please try again in an hour to continue playing!!")
 	}
 
 	// Lock Default lobby
@@ -720,7 +720,7 @@ func renderGamePage(c echo.Context, g *GameHandlers, user entity.User, game enti
 		if newGameSum != gameSum {
 			break
 		} else { // TODO Create a Global Query Pipe for these query type
-			time.Sleep(300 * time.Millisecond)
+			time.Sleep(500 * time.Millisecond)
 			game, _ = g.server.GameRepo.Get(
 				context.Background(),
 				fmt.Sprintf("game:p%d:p%d:%d", game.P1ID, game.P2ID, game.Id))
