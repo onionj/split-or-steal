@@ -1,0 +1,99 @@
+<div class="h-screen flex flex-col items-center justify-between bg-gray-100 p-4">
+
+    <!-- Competitor Profile Section -->
+    <div class="bg-white rounded-lg shadow-lg p-4 flex items-center justify-start space-x-2 w-full max-w-md mx-auto">
+        <div class="w-2/4 flex items-center justify-start space-x-2">
+            <img src="/static/avatar_{{ .Competitor.AvatarID }}.png" alt="Avatar" class="w-16 h-16 rounded-full">
+            <span class="font-semibold ">{{ .Competitor.DisplayName }}</span>
+        </div>
+        <p class="w-2/4">Match Coins: <span class="font-semibold text-yellow-700">{{ .Game.Coins }}</span></p>
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow-md p-4 w-full max-w-md flex-1 overflow-y-auto mt-4 space-y-2">
+        <!-- Table Header -->
+        <div class="flex justify-between text-center mb2">
+            <span class="w-1/3 bg-green-100 text-gray-800 font-semibold py-2 rounded-l-lg ">You</span>
+            <span class="w-1/3 bg-red-100 text-gray-800 font-semibold py-2">Competitor</span>
+            <span class="w-1/3 bg-yellow-100 text-gray-800 font-semibold py-2">Coins</span>
+            <span class="w-1/3 bg-gray-100 text-gray-800 font-semibold py-2 rounded-r-lg">Result</span>
+        </div>
+
+        <!-- Table Rows -->
+        <div>
+            <div class="flex justify-between text-center">
+                <div class="w-1/4 bg-green-200 py-2 rounded-l-lg ">{{ .GameResults.round1YourDecision }}</div>
+                <div class="w-1/4 bg-red-200 py-2">{{ .GameResults.round1CompetitorDecision }}</div>
+                <div class="w-1/4 bg-yellow-200 p-2">{{ .GameResults.round1Coins }}</div>
+                <div class="w-1/4 bg-gray-200 p-2 rounded-r-lg">{{ .GameResults.round1Result }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="flex justify-between text-center">
+                <div class="w-1/4 bg-green-200 py-2 rounded-l-lg">{{ .GameResults.round2YourDecision }}</div>
+                <div class="w-1/4 bg-red-200 py-2">{{ .GameResults.round2CompetitorDecision }}</div>
+                <div class="w-1/4 bg-yellow-200 p-2">{{ .GameResults.round2Coins }}</div>
+                <div class="w-1/4 bg-gray-200 p-2 rounded-r-lg">{{ .GameResults.round2Result }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="flex justify-between text-center">
+                <div class="w-1/4 bg-green-200 py-2 rounded-l-lg">{{ .GameResults.round3YourDecision }}</div>
+                <div class="w-1/4 bg-red-200 py-2">{{ .GameResults.round3CompetitorDecision }}</div>
+                <div class="w-1/4 bg-yellow-200 p-2">{{ .GameResults.round3Coins }}</div>
+                <div class="w-1/4 bg-gray-200 p-2 rounded-r-lg">{{ .GameResults.round3Result }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="flex justify-between text-center">
+                <div class="w-1/4 bg-green-200 py-2 rounded-l-lg">{{ .GameResults.round4YourDecision }}</div>
+                <div class="w-1/4 bg-red-200 py-2">{{ .GameResults.round4CompetitorDecision }}</div>
+                <div class="w-1/4 bg-yellow-200 p-2">{{ .GameResults.round4Coins }}</div>
+                <div class="w-1/4 bg-gray-200 p-2 rounded-r-lg">{{ .GameResults.round4Result }}</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex justify-between text-center">
+                <span class="w-1/4"></span>
+                <span class="w-1/4"></span>
+                <div class="w-1/4 bg-yellow-200 p-2 rounded-l-lg">{{ .GameResults.AllRoundCoins }}</div>
+                <div class="w-1/4 bg-gray-200 p-2 rounded-r-lg">{{ .GameResults.AllRoundResult }}</div>
+            </div>
+        </div>
+
+        <ul class="text-gray-700 space-y-2">
+            <li><span class="font-bold">0</span> - Enjoy the game</li>
+            <li><span class="font-bold">1</span> - 5 coins extra for both shares</li>
+            <li><span class="font-bold">2</span> - All money lost for both steals</li>
+            <li><span class="font-bold">3</span> - You can only steal twice</li>
+        </ul>
+    </div>
+
+    {{ if eq .Game.Status "active" }}
+    <div hx-get="/game-update/{{ .Game.Id }}?gameSum={{ .GameResultsSum }}" hx-target="#game-container"
+        hx-swap="innerHTML" hx-trigger="every 500ms"></div>
+
+    <div class="w-full max-w-md px-4 flex space-x-4 mt-4">
+        <button
+            class="bg-red-500 text-white py-3 rounded-lg w-full font-semibold transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+            hx-get="/game-choice/{{ .Game.Id }}/{{ .GameResults.ActiveRound }}/steal" hx-target="#game-container"
+            hx-swap="innerHTML" hx-disabled-elt="this" {{ if eq .GameResults.ActiveRound "-1" }} disabled {{ end }}">
+            Steal 
+        </button>
+        <button
+            class="bg-green-500 text-white py-3 rounded-lg w-full font-semibold transition hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+            hx-get="/game-choice/{{ .Game.Id }}/{{ .GameResults.ActiveRound }}/share" hx-target="#game-container"
+            hx-swap="innerHTML" hx-disabled-elt="this" {{ if eq .GameResults.ActiveRound "-1" }} disabled {{ end }}>
+            Share
+        </button>
+    </div>
+
+    {{else}}
+    <button
+        class="bg-yellow-500 text-gray-800 py-3 w-full max-w-md rounded-lg text-center font-semibold text-lg mt-4 mb-4 transition hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50"
+        hx-get="/menu" hx-target="#game-container" hx-swap="innerHTML" hx-disabled-elt="this">
+        Back to Menu
+    </button>
+    {{end}}
+</div>

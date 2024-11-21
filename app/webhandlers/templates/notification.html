@@ -1,0 +1,10 @@
+<div id="notif-box" class="items-center bg-red-100 text-red-800 font-semibold text-center p-2">
+    <p>{{ . }}</p>
+</div>
+
+<script>
+    setTimeout(() => {
+        const notifEl = document.getElementById("notif-box");
+        notifEl.style.display = "none";
+    }, 5000);
+</script>

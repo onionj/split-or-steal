@@ -1,0 +1,41 @@
+<!-- templates/menu.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <script src="/static/js/telegram-web-app.js"></script>
+    <script src="/static/js/htmx.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="notification-container" class="fixed top-0 w-screen"></div>
+    <div id="game-container">
+        <div hx-get="/menu" hx-trigger="load" hx-target="#game-container" hx-swap="innerHTML"></div>
+    </div>
+
+    <script>
+        Telegram.WebApp.ready();
+        // Listen for the htmx request configuration event
+        document.body.addEventListener("htmx:configRequest", (event) => {
+            // Add initData to the Authorization header
+            const initData = Telegram.WebApp.initData;
+            if (initData) {
+                event.detail.headers['Authorization'] = initData;
+            } else {
+                event.detail.headers['Authorization'] = localStorage.getItem("initData")
+            }
+        });
+    </script>
+
+</body>
+<style>
+    button:disabled {
+        opacity: 0.5;
+    }
+</style>
+
+</html>
