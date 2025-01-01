@@ -1,2 +1,2 @@
 
-# split-or-share
+# split-or-steal
